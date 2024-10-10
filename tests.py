@@ -1,4 +1,3 @@
-#miles davies @02921243
 import unittest
 import sys
 
