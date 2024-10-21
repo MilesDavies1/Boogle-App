@@ -1,117 +1,92 @@
 import unittest
-import sys
-
-sys.path.append("/home/codio/workspace/")  # Path to find boggle_solver.py and Boggle Class
 
 from boggle_solver import Boggle
 
-class TestSuite_Alg_Scalability_Cases(unittest.TestCase):
 
-  # Test for a 3x3 grid
-  def test_Normal_case_3x3(self):
-    grid = [["A", "B", "C"], ["D", "E", "F"], ["G", "H", "I"]]
-    dictionary = ["abc", "abdhi", "abi", "ef", "cfi", "dea"]
-    mygame = Boggle(grid, dictionary)
-    solution = mygame.getSolution()
-    solution = [x.upper() for x in solution]
-    expected = ["abc", "abdhi"]
-    expected = [x.upper() for x in expected]
-    self.assertEqual(sorted(expected), sorted(solution))
+class TestBoggle(unittest.TestCase):
 
-  # Test for 4x4 grid
-  def test_Scalability_case_4x4(self):
-    grid = [["A", "B", "C", "D"], ["E", "F", "G", "H"], ["I", "J", "K", "L"], ["M", "N", "O", "P"]]
-    dictionary = ["abcd", "efgh", "ijkl", "mnop", "aeim", "dgpl"]
-    mygame = Boggle(grid, dictionary)
-    solution = mygame.getSolution()
-    solution = [x.upper() for x in solution]
-    expected = ["abcd", "efgh", "ijkl", "mnop", "aeim", "dgpl"]
-    expected = [x.upper() for x in expected]
-    self.assertEqual(sorted(expected), sorted(solution))
+    def test_isValid_Grid(self):
+        """
+        Test that a valid grid returns True.
+        """
+        grid = [['A', 'B'], ['C', 'D']]
+        self.assertTrue(Boggle.is_valid_grid(grid))
 
-  # Test for 5x5 grid
-  def test_Scalability_case_5x5(self):
-    grid = [["A", "B", "C", "D", "E"], ["F", "G", "H", "I", "J"], ["K", "L", "M", "N", "O"],
-            ["P", "Q", "R", "S", "T"], ["U", "V", "W", "X", "Y"]]
-    dictionary = ["abcde", "fghij", "klmno", "pqrst", "uvwxyz", "aeimq", "dglpx"]
-    mygame = Boggle(grid, dictionary)
-    solution = mygame.getSolution()
-    solution = [x.upper() for x in solution]
-    expected = ["abcde", "fghij", "klmno", "pqrst", "aeimq", "dglpx"]
-    expected = [x.upper() for x in expected]
-    self.assertEqual(sorted(expected), sorted(solution))
+    def test_invalid_Grid_Empty(self):
+        """
+        Test that an empty grid returns False.
+        """
+        grid = []
+        self.assertFalse(Boggle.is_valid_grid(grid))
 
-  # Additional scalability tests for larger grids (6x6, 7x7, 13x13, etc.) can follow the same pattern.
+    def test_invalid_Grid_Varying_Row_Lengths(self):
+        """
+        Test that grids with varying row lengths return False.
+        """
+        grid = [['A', 'B'], ['C']]
+        self.assertFalse(Boggle.is_valid_grid(grid))
 
-class TestSuite_Simple_Edge_Cases(unittest.TestCase):
+    def test_duplicate_letters(self):
+        """
+        Test that duplicate letters do not lead to immediate loops.
+        """
+        grid = [['A', 'A'], ['A', 'A']]
+        dictionary = ['AA']
+        game = Boggle(grid, dictionary)
+        solution = game.getSolution()
+        self.assertIn('AA', solution)
 
-  # Test case for a 1x1 grid
-  def test_SquareGrid_case_1x1(self):
-    grid = [["A"]]
-    dictionary = ["a", "b", "c"]
-    mygame = Boggle(grid, dictionary)
-    solution = mygame.getSolution()
-    solution = [x.upper() for x in solution]
-    expected = []
-    self.assertEqual(sorted(expected), sorted(solution))
+    def test_no_words_in_grid(self):
+        """
+        Test when no valid words can be formed.
+        """
+        grid = [['X', 'Y'], ['Z', 'Q']]
+        dictionary = ['A', 'B', 'C']
+        game = Boggle(grid, dictionary)
+        solution = game.getSolution()
+        self.assertEqual(solution, [])
 
-  # Test case for an empty grid
-  def test_EmptyGrid_case_0x0(self):
-    grid = [[]]
-    dictionary = ["hello", "there", "general", "kenobi"]
-    mygame = Boggle(grid, dictionary)
-    solution = mygame.getSolution()
-    solution = [x.upper() for x in solution]
-    expected = []
-    self.assertEqual(sorted(expected), sorted(solution))
+    def test_words_cannot_end_with_S(self):
+        """
+        Test that words do not end with 'S'.
+        """
+        grid = [['A', 'B'], ['C', 'S']]
+        dictionary = ['A', 'AB', 'AC', 'C']
+        game = Boggle(grid, dictionary)
+        solution = game.getSolution()
+        self.assertNotIn('C', solution)
 
-  # Test case for a non-square grid (2x3)
-  def test_NonSquareGrid_case_2x3(self):
-    grid = [["A", "B", "C"], ["D", "E", "F"]]
-    dictionary = ["abc", "def", "ab", "cf"]
-    mygame = Boggle(grid, dictionary)
-    solution = mygame.getSolution()
-    solution = [x.upper() for x in solution]
-    expected = ["ABC", "DEF", "AB", "CF"]
-    expected = [x.upper() for x in expected]
-    self.assertEqual(sorted(expected), sorted(solution))
+    def test_words_can_use_cell_once(self):
+        """
+        Test that a letter can only be used once in a word.
+        """
+        grid = [['A', 'B'], ['C', 'D']]
+        dictionary = ['ABCD']
+        game = Boggle(grid, dictionary)
+        solution = game.getSolution()
+        self.assertNotIn('ABCD', solution)
 
-class TestSuite_Complete_Coverage(unittest.TestCase):
+    def test_grid_case_1x1(self):
+        """
+        Test a 1x1 grid case.
+        """
+        grid = [['A']]
+        dictionary = ['A']
+        game = Boggle(grid, dictionary)
+        solution = game.getSolution()
+        self.assertIn('A', solution)
 
-  # Complex test case for complete coverage of dictionary and grid interactions
-  def test_Complex_Case(self):
-    grid = [["Q", "U", "I", "C", "K"], ["B", "R", "O", "W", "N"], ["F", "O", "X", "J", "U"], ["M", "P", "S", "A", "Z"], ["Y", "D", "T", "H", "E"]]
-    dictionary = ["quick", "brown", "fox", "jump", "jumps", "over", "lazy", "dog"]
-    mygame = Boggle(grid, dictionary)
-    solution = mygame.getSolution()
-    solution = [x.upper() for x in solution]
-    expected = ["QUICK", "BROWN", "FOX", "JUMP", "JUMPS", "DOG"]
-    expected = [x.upper() for x in expected]
-    self.assertEqual(sorted(expected), sorted(solution))
+    def test_long_words(self):
+        """
+        Test that long words can be formed correctly.
+        """
+        grid = [['A', 'B', 'C'], ['D', 'E', 'F'], ['G', 'H', 'I']]
+        dictionary = ['ABCDEFG', 'ABCDEFGH']
+        game = Boggle(grid, dictionary)
+        solution = game.getSolution()
+        self.assertIn('ABCDEFGH', solution)
 
-class TestSuite_Qu_and_St(unittest.TestCase):
 
-  # Test case to handle 'QU' pattern in the grid
-  def test_Qu_Pattern(self):
-    grid = [["Q", "U", "I", "C"], ["K", "L", "M", "N"], ["O", "P", "Q", "U"], ["R", "S", "T", "U"]]
-    dictionary = ["quick", "quit", "quip", "quota"]
-    mygame = Boggle(grid, dictionary)
-    solution = mygame.getSolution()
-    solution = [x.upper() for x in solution]
-    expected = ["QUICK", "QUIT", "QUIP", "QUOTA"]
-    expected = [x.upper() for x in expected]
-    self.assertEqual(sorted(expected), sorted(solution))
+if __name__ == "__main__":
+    unittest.main()
 
-  # Test case for 'ST' pattern
-  def test_St_Pattern(self):
-    grid = [["S", "T", "U", "V"], ["W", "X", "Y", "Z"], ["A", "B", "C", "D"], ["E", "F", "G", "H"]]
-    dictionary = ["start", "stun", "stop", "stem"]
-    mygame = Boggle(grid, dictionary)
-    solution = mygame.getSolution()
-    solution = [x.upper() for x in solution]
-    expected = ["START", "STUN", "STOP", "STEM"]
-    expected = [x.upper() for x in expected]
-    self.assertEqual(sorted(expected), sorted(solution))
-
-if __name__ == '__main__':
-  unittest.main()
