@@ -3,11 +3,13 @@ import React from "react";
 const WordList = ({ words }) => {
   return (
     <div className="word-list">
-      <h2>Words Found</h2>
+      <h3>Words Found:</h3>
       <ul>
-        {words.map((word, index) => (
-          <li key={index}>{word}</li>
-        ))}
+        {words.length > 0 ? (
+          words.map((word, index) => <li key={index}>{word}</li>)
+        ) : (
+          <li>No words found yet!</li>
+        )}
       </ul>
     </div>
   );
