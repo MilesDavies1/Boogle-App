@@ -1,0 +1,117 @@
+/* App.css */
+
+/* Full viewport height for centering */
+html, body {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Arial', sans-serif;
+  background-color: #2a2a2a; /* Dark background for the whole page */
+  color: #e4e4e4; /* Light text color for contrast */
+}
+
+/* Center the main app container */
+#root {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  padding: 20px;
+}
+
+/* Dark theme app container with smaller size */
+.app-container {
+  text-align: center;
+  width: 450px;  /* Reduced width */
+  max-width: 100%;
+  background-color: #333333; /* Dark background for the container */
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+  padding: 20px;  /* Reduced padding */
+}
+
+/* Styling for the board (grid) */
+.board {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* Ensures 4 columns for the grid */
+  grid-gap: 8px; /* Reduced gap between tiles */
+  margin: 15px 0; /* Reduced margin */
+}
+
+.row {
+  display: flex;
+}
+
+.tile {
+  width: 60px; /* Smaller tile size */
+  height: 60px; /* Smaller tile size */
+  font-size: 1.8rem; /* Smaller font size */
+  text-align: center;
+  background-color: #444444; /* Dark tiles */
+  color: #fff; /* Light text on dark tiles */
+  border: 1px solid #555555;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.1s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.tile:hover {
+  background-color: #666666; /* Lighter hover effect */
+  transform: scale(1.05); /* Slight zoom effect on hover */
+}
+
+input {
+  margin-top: 10px;
+  padding: 8px; /* Smaller padding */
+  font-size: 1.3rem; /* Smaller input font */
+  text-align: center;
+  width: 100%;
+  border: 1px solid #555555;
+  border-radius: 5px;
+  background-color: #444444; /* Dark input background */
+  color: #e4e4e4; /* Light input text */
+}
+
+button {
+  padding: 10px 18px; /* Smaller button padding */
+  font-size: 1rem; /* Smaller font size */
+  margin: 8px 0; /* Reduced margin */
+  cursor: pointer;
+  border-radius: 5px;
+  background-color: #6a5acd; /* Purple button for contrast */
+  color: white;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #5a4b9e; /* Slightly darker on hover */
+}
+
+.timer {
+  font-size: 1.2rem; /* Smaller timer font */
+  margin-bottom: 15px; /* Reduced margin */
+  color: #b3b3b3; /* Light gray timer text */
+}
+
+.word-list ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.word-list li {
+  font-size: 1rem; /* Smaller word list font */
+  margin: 5px 0;
+  color: #e4e4e4; /* Light text for word list */
+}
+
+.controls {
+  margin-bottom: 15px; /* Reduced margin */
+}
+
