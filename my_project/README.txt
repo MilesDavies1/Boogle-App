@@ -1,1 +1,1 @@
-Assignment 5 Django Connection Files
+***STARTER PROJECT 5 DJANGO CONNECTION FILES***
