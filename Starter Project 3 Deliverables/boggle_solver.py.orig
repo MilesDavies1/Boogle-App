@@ -1,0 +1,105 @@
+***Code does not pass 3x3 and 4x4 unit tests***
+
+
+class Boggle:
+    def __init__(self, grid=None, dictionary=None):
+        # Initialize the Boggle board and dictionary
+        self.grid = grid if grid is not None else []  # Set the grid or an empty list if None
+        self.dictionary = set(dictionary) if dictionary is not None else set()  # Convert dictionary to a set for fast lookups
+        self.solution = set()  # Set to store unique found words
+        self.visited = set()  # Set to keep track of visited cells
+        self.max_word_length = max((len(word) for word in self.dictionary), default=0)  # Max length of words in the dictionary
+
+    def setGrid(self, grid):
+        # Update the grid
+        self.grid = grid
+
+    def setDictionary(self, dictionary):
+        # Update the dictionary and recalculate the max word length
+        self.dictionary = set(dictionary)
+        self.max_word_length = max((len(word) for word in self.dictionary), default=0)
+
+    def getSolution(self):
+        # Reset the solution for a new search
+        self.solution = set()
+        
+        # Return empty if grid or dictionary is not set
+        if not self.grid or not self.dictionary:
+            return list(self.solution)
+
+        rows = len(self.grid)  # Get the number of rows in the grid
+        cols = len(self.grid[0])  # Get the number of columns in the grid
+
+        # Start DFS from each cell in the grid
+        for r in range(rows):
+            for c in range(cols):
+                self._dfs(r, c, "")  # Start DFS with an empty current word
+
+        # Return sorted list of found solutions
+        return sorted(list(self.solution))  # Sort the results before returning
+
+    def _dfs(self, r, c, current_word):
+        # Check if the current cell is already visited
+        if (r, c) in self.visited:
+            return
+        
+        current_word += self.grid[r][c]  # Add the current cell's letter to the current word
+
+        # Stop exploring if the current word exceeds the maximum length in the dictionary
+        if len(current_word) > self.max_word_length:
+            return
+
+        # Check if the current word is valid (length >= 3 and in the dictionary)
+        if len(current_word) >= 3 and current_word in self.dictionary:
+            print(f"Found valid word: {current_word}")  # Debug: Print found words
+            self.solution.add(current_word)  # Add the valid word to the solution set
+
+        # Mark the current cell as visited
+        self.visited.add((r, c))
+
+        # Explore all 8 possible directions around the current cell
+        for dr, dc in [(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)]:
+            nr, nc = r + dr, c + dc  # Calculate new row and column
+            # Check if the new position is within bounds and not visited
+            if self._is_within_bounds(nr, nc) and (nr, nc) not in self.visited:
+                self._dfs(nr, nc, current_word)  # Recursive call to continue DFS
+
+        # Backtrack: unmark the current cell as visited for future paths
+        self.visited.remove((r, c))
+
+    def _is_within_bounds(self, r, c):
+        # Check if the given row and column indices are within the grid boundaries
+        return 0 <= r < len(self.grid) and 0 <= c < len(self.grid[0])
+
+# Example usage
+if __name__ == "__main__":
+    # Example grids and dictionaries to demonstrate functionality
+    grid1 = [["A", "B"], ["C", "D"]]
+    dictionary1 = ["A", "B", "AC", "ACA", "ACB", "DE"]
+    boggle1 = Boggle(grid1, dictionary1)
+    print(boggle1.getSolution())  # Expected output: ["ACB"]
+
+    grid2 = [["A", "B", "C", "D"], ["E", "F", "G", "H"], ["I", "J", "K", "L"], ["A", "B", "C", "D"]]
+    dictionary2 = ["ABEF", "AFJIEB", "DGKD", "DGKA"]
+    boggle2 = Boggle(grid2, dictionary2)
+    print(boggle2.getSolution())  # Expected output: ["ABEF", "AFJIEB", "DGKD"]
+
+    grid3 = [
+        ["T", "R", "E"],
+        ["A", "S", "T"],
+        ["P", "O", "L"]
+    ]
+    dictionary3 = ["TAP", "TOP", "TASTE", "TEA", "POT", "STOLE", "TRAPS", "STOLE"]
+    boggle3 = Boggle(grid3, dictionary3)
+    print(boggle3.getSolution())  # Expected output: ['TAP', 'TOP', 'TASTE', 'TEA', 'POT', 'STOLE']
+
+    grid4 = [
+        ["A", "B", "C"],
+        ["D", "E", "F"],
+        ["G", "H", "I"]
+    ]
+    dictionary4 = ["AB", "BCD", "CFI", "E", "DE", "GHI", "EF", "ADG", "BCE"]
+    boggle4 = Boggle(grid4, dictionary4)
+    print(boggle4.getSolution())  # Expected output: ['AB', 'BCD', 'CFI', 'DE', 'GHI', 'EF', 'ADG', 'BCE']
+
+
